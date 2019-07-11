@@ -1,0 +1,43 @@
+#importa librerias
+library(plyr)
+library(readr)
+
+#lista de archivos
+myfiles = list.files(path="H:/NextU/D3/ExamenFinal", pattern="*.CSV", full.names=TRUE)
+
+#crea data ser EXFI y carga los datos de la lista de archivos
+EXFI = ldply(myfiles, read_csv)
+
+#dataset de trabajo
+DFEXFI <- EXFI
+
+#limpia datos nulos
+delete.na<- function (DFEXFI,n=0){
+DFEXFI[rowSums(is.na(DFEXFI))<=n,]
+}
+delete.na(DFEXFI)
+
+#renombra columnas
+colnames(DFEXFI)<- (c("Reporter","Partner","ProductCat","IndicatorType","Indicator","2015","2014","2013","2012","2011","2010","2009","2008","2007","2006","2005","2004","2003","2002","2001","2000","1999","1998","1997","1996","1995","1994","1993","1992","1991","1990","1989","1988"))		
+
+#fitra Indicador
+DFEXFI<-filter(DFEXFI,Indicator=="Trade (US$ Mil)-Top 5 Export Partner")
+
+#quita NA
+DFEXFI<-delete.na(DFEXFI)
+
+#envia a csv
+write.csv(DFEXFI, file="H:/NextU/D3/ExamenFinal/Examen/countries-data.csv", na="")
+
+#envia a json
+library(readr)
+> library(jsonlite)
+> DFEXF1%>%
++ toJSON()%>%
++ write_lines(path="H:/NextU/D3/ExamenFinal/Examen/countries-data.json")
+
+
+
+-------------NODE -------------
+
+gulp serve
